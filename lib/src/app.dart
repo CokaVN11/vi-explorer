@@ -7,6 +7,8 @@ import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
+import 'map/map.dart';
+
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -72,6 +74,9 @@ class MyApp extends StatelessWidget {
                   case SampleItemDetailsView.routeName:
                     return const SampleItemDetailsView();
                   case SampleItemListView.routeName:
+                    return const SampleItemListView();
+                  case MapView.routeName:
+                    return const MapView();
                   default:
                     return const SampleItemListView();
                 }
@@ -82,4 +87,5 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+
 }
