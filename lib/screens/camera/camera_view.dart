@@ -2,15 +2,9 @@ import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import '../../screens/camera/image_preview.dart';
-import '../../settings/sizes.dart';
-
-// List<CameraDescription> cameras = [];
-
-// Future<void> getAvailableCams() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   cameras = await availableCameras();
-// }
+import 'package:app/screens/camera/history.dart';
+import 'package:app/screens/camera/image_preview.dart';
+import 'package:app/settings/sizes.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key, required this.cameras});
@@ -48,7 +42,7 @@ class _CameraScreenState extends State<CameraScreen> {
     super.initState();
     controller = CameraController(
       cameras[0],
-      ResolutionPreset.low,
+      ResolutionPreset.high,
       enableAudio: false,
     );
     controller.initialize().then((_) {
@@ -82,7 +76,9 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Container(
-        padding: const EdgeInsets.only(top: 30),
+        padding: EdgeInsets.symmetric(
+          vertical: 40,
+        ),
         height: Sizes.height(context),
         width: Sizes.width(context),
         child: Stack(
@@ -114,6 +110,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.8),
                           fontSize: 17,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -123,65 +120,77 @@ class _CameraScreenState extends State<CameraScreen> {
             ),
             SingleChildScrollView(
               controller: scrollController,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 5),
-                    width: Sizes.width(context),
-                    height: Sizes.height(context),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onDoubleTap: () {
-                            changeCamera();
-                          },
-                          onScaleUpdate: _onScaleUpdate,
-                          onScaleStart: _onScaleStart,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 50),
-                            // margin: EdgeInsets.symmetric(vertical: 20),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            width: Sizes.width(context),
-                            height: Sizes.width(context),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: CameraPreview(
-                                controller,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Positioned(
-                                      bottom: 10,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        width: 40,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          // color: Colors.white.withOpacity(0.5),
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100.0),
-                                          child: BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 10, sigmaY: 10),
-                                            child: Container(
-                                              color: Colors.transparent,
-                                              child: Center(
-                                                child: Text(
-                                                  _currentScale
-                                                      .toStringAsFixed(1),
-                                                  style: TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                        .withOpacity(0.8),
-                                                    fontSize: 15.0,
-                                                    fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onVerticalDragUpdate: (details) {
+                      if (details.delta.dy < 0) {
+                        print("swipe up");
+                        scrollController.animateTo(
+                            scrollController.position.maxScrollExtent,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.easeIn);
+                      }
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 50, horizontal: 5),
+                      width: Sizes.width(context),
+                      height: Sizes.height(context),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onDoubleTap: () {
+                              changeCamera();
+                            },
+                            onScaleUpdate: _onScaleUpdate,
+                            onScaleStart: _onScaleStart,
+                            child: Container(
+                              margin: EdgeInsets.symmetric(vertical: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              width: Sizes.width(context),
+                              height: Sizes.width(context),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: CameraPreview(
+                                  controller,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Positioned(
+                                        bottom: 10,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            // color: Colors.white.withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100.0),
+                                            child: BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 10, sigmaY: 10),
+                                              child: Container(
+                                                color: Colors.transparent,
+                                                child: Center(
+                                                  child: Text(
+                                                    _currentScale
+                                                        .toStringAsFixed(1),
+                                                    style: TextStyle(
+                                                      color: Colors.white
+                                                          .withOpacity(0.8),
+                                                      fontSize: 15.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -189,102 +198,174 @@ class _CameraScreenState extends State<CameraScreen> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
+                              
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 18),
-                          margin: const EdgeInsets.only(bottom: 50),
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                  onPressed: () async {
-                                    await controller.setFlashMode(flash == false
-                                        ? FlashMode.always
-                                        : FlashMode.off);
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                    onPressed: () async {
+                                      await controller.setFlashMode(
+                                          flash == false
+                                              ? FlashMode.always
+                                              : FlashMode.off);
 
-                                    setState(() {
-                                      flash = !flash;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    flash
-                                        ? Icons.flash_on_outlined
-                                        : Icons.flash_off_outlined,
-                                    color: Colors.black,
-                                    size: 40,
-                                  )),
-                              Container(
-                                  alignment: Alignment.center,
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                        color: Color(0xffFCB600), width: 5),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
                                       setState(() {
-                                        clicked = !clicked;
-                                      });
-                                      controller.takePicture().then((value) {
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>ImagePreview(imagePath: value.path,)));
-                                        showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            context: context,
-                                            builder: (context) => ImagePreview(
-                                                  imagePath: value.path,
-                                                  onSend: () {
-                                                    setState(() {});
-                                                  },
-                                                ));
+                                        flash = !flash;
                                       });
                                     },
-                                    onLongPress: () {
-                                      setState(() {
-                                        clicked = !clicked;
-                                      });
-                                    },
-                                    child: AnimatedContainer(
-                                      onEnd: () {
+                                    icon: Icon(
+                                      flash
+                                          ? Icons.flash_on_outlined
+                                          : Icons.flash_off_outlined,
+                                      color: const Color.fromARGB(255, 43, 43, 43),
+                                      size: 40,
+                                    )),
+                                Container(
+                                    alignment: Alignment.center,
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(
+                                          color: Color(0xffFCB600), width: 5),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
                                         setState(() {
-                                          clicked = false;
+                                          clicked = !clicked;
+                                        });
+                                        controller.takePicture().then((value) {
+                                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>ImagePreview(imagePath: value.path,)));
+                                          showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              builder: (context) =>
+                                                  ImagePreview(
+                                                    imagePath: value.path,
+                                                    onSend: () {
+                                                      setState(() {});
+                                                    },
+                                                  ));
                                         });
                                       },
-                                      duration: Duration(milliseconds: 100),
-                                      width: clicked ? 50 : 80,
-                                      height: clicked ? 50 : 80,
+                                      onLongPress: () {
+                                        setState(() {
+                                          clicked = !clicked;
+                                        });
+                                      },
+                                      child: AnimatedContainer(
+                                        onEnd: () {
+                                          setState(() {
+                                            clicked = false;
+                                          });
+                                        },
+                                        duration: Duration(milliseconds: 100),
+                                        width: clicked ? 50 : 80,
+                                        height: clicked ? 50 : 80,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: clicked
+                                              ? Color(0xff47444c)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    )),
+                                IconButton(
+                                    onPressed: () {
+                                      changeCamera();
+                                    },
+                                    icon: const Icon(
+                                      Icons.flip_camera_ios_outlined,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      size: 40,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 80),
+                            width: 125,
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 40,
+                                      height: 40,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: clicked
-                                            ? Color(0xff47444c)
-                                            : Colors.black.withOpacity(0.7),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Color.fromARGB(255, 92, 92, 92),
+                                      ),
+                                      child: Icon(
+                                        Icons.photo,
+                                        color: Colors.white.withOpacity(0.5),
+                                        size: 30,
                                       ),
                                     ),
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    changeCamera();
+                                    Text(
+                                      "Gallery",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 92, 92, 92).withOpacity(0.5),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    scrollController.animateTo(
+                                        scrollController.position.maxScrollExtent,
+                                        duration: Duration(milliseconds: 500),
+                                        curve: Curves.easeIn);
                                   },
-                                  icon: const Icon(
-                                    Icons.flip_camera_ios_outlined,
-                                    color: Colors.black,
-                                    size: 40,
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ],
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: 40,
+                                    height: 40,
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: Color.fromARGB(255, 55, 55, 55).withOpacity(0.5),
+                                      size: 40,
+                                      weight: 10,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
+                  GestureDetector(
+                    onVerticalDragUpdate: (details) {
+                      if (details.delta.dy > 0) {
+                        print("swipe down");
+                        scrollController.animateTo(
+                            scrollController.position.minScrollExtent,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.easeIn);
+                      }
+                    },
+                    child: Container(
+                      width: Sizes.width(context),
+                      height: Sizes.height(context),
+                      child: HistoryScreen(scrollController: scrollController),
+                    ),
+                  )
                 ],
               ),
             ),

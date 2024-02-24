@@ -18,9 +18,10 @@ dependencies:
   flutter_bloc: ^8.1.4
   flutter_localizations:
     sdk: flutter
+  gallery_saver: ^2.3.2
   google_maps_flutter: ^2.5.3
   google_maps_flutter_web: ^0.5.4+3
-  http: ^1.2.1
+  http: ^0.13.1
   json_serializable: ^6.7.1
 
 dev_dependencies:
