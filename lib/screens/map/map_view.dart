@@ -70,18 +70,23 @@ class BottomSheet extends StatelessWidget{
             const SizedBox(
               height: 10.0,
             ),
-            const TextButton(
-              onPressed: null,
-              child: Column(
-                children: <Widget>[
-                  Icon(Icons.keyboard_arrow_up, size: 30.0),
-                  Text(
-                    'XEM THÊM VỀ TP.HCM',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                    ),
-                  )
-                ],
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/location');
+              },
+              child: const TextButton(
+                onPressed: null,
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.keyboard_arrow_up, size: 30.0),
+                    Text(
+                      'XEM THÊM VỀ TP.HCM',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ],
@@ -227,7 +232,11 @@ class _MapViewState extends State<MapView> {
         ),
         Container(
             color: Colors.transparent,
-            margin: const EdgeInsets.all(20.0),
+            margin: const EdgeInsets.only(
+              left: 20.0,
+              right: 20.0,
+              top: 40.0,
+            ),
             child: SearchAnchor(
               builder: (context, controller) {
                 return SearchBar(

@@ -1,4 +1,4 @@
-import 'package:app/src/location_pages/location_description.dart';
+import 'package:app/screens/location/location_description.dart';
 import 'package:flutter/material.dart';
 
 class LocationHome extends StatefulWidget {

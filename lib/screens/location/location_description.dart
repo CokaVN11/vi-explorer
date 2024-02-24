@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/src/location_pages/location_home_page.dart';
+import 'package:app/screens/location/location_home_page.dart';
 
 class LocationDescription extends StatefulWidget {
   const LocationDescription({super.key});
