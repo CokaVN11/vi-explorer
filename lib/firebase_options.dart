@@ -44,38 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD-3JHq6HxczgGBoeHyES210zcz4MNAXSg',
-    appId: '1:966863187003:web:93cfb3d2eccadef770401e',
-    messagingSenderId: '966863187003',
-    projectId: 'viexplorer-3c58d',
-    authDomain: 'viexplorer-3c58d.firebaseapp.com',
-    storageBucket: 'viexplorer-3c58d.appspot.com',
-    measurementId: 'G-EWM3M13QC5',
+    apiKey: 'AIzaSyCPnNvbqFCnoK7TlkajDoONLDMVrpDuTbU',
+    appId: '1:269447796570:web:5b6f456a776dc610668563',
+    messagingSenderId: '269447796570',
+    projectId: 'viexplorer-79fa7',
+    authDomain: 'viexplorer-79fa7.firebaseapp.com',
+    storageBucket: 'viexplorer-79fa7.appspot.com',
+    measurementId: 'G-BV46NJ6KV7',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD0U1px6Lt1zMsieq7eZmdwArEyLhoLEns',
-    appId: '1:966863187003:android:57340500e0abbc1570401e',
-    messagingSenderId: '966863187003',
-    projectId: 'viexplorer-3c58d',
-    storageBucket: 'viexplorer-3c58d.appspot.com',
+    apiKey: 'AIzaSyC-wzwUdHCdon8kW072wXdMYHRYqbf9zU0',
+    appId: '1:269447796570:android:9bc1ba8025895d2e668563',
+    messagingSenderId: '269447796570',
+    projectId: 'viexplorer-79fa7',
+    storageBucket: 'viexplorer-79fa7.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA9JFpZCyRVZecLs_zk8clDJ_O6Gn6biwM',
-    appId: '1:966863187003:ios:58d2e5fa8d75b78670401e',
-    messagingSenderId: '966863187003',
-    projectId: 'viexplorer-3c58d',
-    storageBucket: 'viexplorer-3c58d.appspot.com',
+    apiKey: 'AIzaSyBJJs9IoXii_5Rt4YhGMJTskVZJHN6HEMo',
+    appId: '1:269447796570:ios:f990301ae34ee038668563',
+    messagingSenderId: '269447796570',
+    projectId: 'viexplorer-79fa7',
+    storageBucket: 'viexplorer-79fa7.appspot.com',
     iosBundleId: 'com.example.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA9JFpZCyRVZecLs_zk8clDJ_O6Gn6biwM',
-    appId: '1:966863187003:ios:01b59c72229b691670401e',
-    messagingSenderId: '966863187003',
-    projectId: 'viexplorer-3c58d',
-    storageBucket: 'viexplorer-3c58d.appspot.com',
+    apiKey: 'AIzaSyBJJs9IoXii_5Rt4YhGMJTskVZJHN6HEMo',
+    appId: '1:269447796570:ios:f399befdc55ff518668563',
+    messagingSenderId: '269447796570',
+    projectId: 'viexplorer-79fa7',
+    storageBucket: 'viexplorer-79fa7.appspot.com',
     iosBundleId: 'com.example.app.RunnerTests',
   );
 }

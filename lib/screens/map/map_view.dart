@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../settings/global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BottomSheet extends StatelessWidget {
   final String cityName;
@@ -108,6 +109,9 @@ class _MapViewState extends State<MapView> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(14.0583, 108.2772);
+
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
   final _marker_colors = <String, double>{
     'visited': BitmapDescriptor.hueAzure,
     'new': BitmapDescriptor.hueGreen
@@ -116,16 +120,49 @@ class _MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
-    _markers.addAll(_createCityMarkers());
+    _initMarkers();
   }
 
-  Map<String, Marker> _createCityMarkers() {
-    return {
-      'Da Lat': _createMarker('Đà Lạt', const LatLng(11.9404, 108.4580), 'new'),
-      'Da Nang': _createMarker('Đà Nẵng', const LatLng(16.0544, 108.2022), 'new'),
-      'Ha Noi': _createMarker('Hà Nội', const LatLng(21.0285, 105.8542), 'new'),
-      'Ho Chi Minh': _createMarker('TP.HCM', const LatLng(10.8231, 106.6291), 'visited'),
-    };
+  Future<void> _initMarkers() async {
+    final markers = await _createCityMarkers();
+    setState(() {
+      _markers.addAll(markers);
+    });
+  }
+
+
+  Future<Map<String, Marker>> _createCityMarkers() async {
+    final regions = <String, Marker> {};
+    final regionsSnapshot = await db.collection('regions').get();
+    regionsSnapshot.docs.forEach((element) {
+      final data = element.data();
+      final name = data['name'];
+      final latLng = LatLng(data['coor'].latitude, data['coor'].longitude);
+      regions[data['id']] = _createMarker(name, latLng, 'new');
+    });
+
+    final userSnapshot = await db.collection('users').get();
+    final user = userSnapshot.docs.first.data();
+    final visited = List<String>.from(user['visited']);
+
+    visited.forEach((element) {
+      final regionId = element.substring(element.length - 3);
+      if (regions.containsKey(regionId)) {
+        final latLng = regions[regionId]!.position;
+        regions[regionId] = _createMarker(regions[regionId]!.markerId.value, latLng, 'visited');
+      }
+    });
+    if (kDebugMode) {
+      print(regions);
+    }
+    return regions;
+
+    // return {
+    //   'Da Lat': _createMarker('Đà Lạt', const LatLng(11.9404, 108.4580), 'new'),
+    //   'Da Nang': _createMarker('Đà Nẵng', const LatLng(16.0544, 108.2022), 'new'),
+    //   'Ha Noi': _createMarker('Hà Nội', const LatLng(21.0285, 105.8542), 'new'),
+    //   'Ho Chi Minh': _createMarker('TP.HCM', const LatLng(10.8231, 106.6291), 'visited'),
+    // };
   }
 
   Marker _createMarker(String city, LatLng position, String status) {
