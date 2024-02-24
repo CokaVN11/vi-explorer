@@ -14,6 +14,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  flutter_barcode_scanner: ^2.0.0
+  qr_code_scanner: ^1.0.1
+  tutorial_coach_mark: ^1.2.11
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +34,15 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Montserrat-BoldItalic.ttf
+          weight: 700
+          style: italic
