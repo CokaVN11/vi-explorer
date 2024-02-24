@@ -1,7 +1,6 @@
-import 'package:app/src/app.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../settings/settings_view.dart';
+import '../../settings/settings_view.dart';
 import 'locations.dart' as locations;
 
 
