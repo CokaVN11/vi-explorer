@@ -1,17 +1,5 @@
 import 'package:flutter/material.dart';
 import 'PassportScreen.dart';
-//
-// class ProfileScreenApp extends StatelessWidget {
-//   const ProfileScreenApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       title: 'Profile Screen',
-//       home: ProfileScreen(),
-//     );
-//   }
-// }
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreenApp extends StatelessWidget {

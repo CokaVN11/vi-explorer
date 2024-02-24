@@ -5,8 +5,10 @@ import '../../settings/global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class BottomSheet extends StatelessWidget{
-  const BottomSheet({super.key});
+class BottomSheet extends StatelessWidget {
+  final String cityName;
+  final String generalInfo;
+  const BottomSheet({super.key, required this.cityName, required this.generalInfo});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,21 +44,26 @@ class BottomSheet extends StatelessWidget{
                 ),
               ),
             ),
-            const Text(
-              'Ho Chi Minh',
-              style: TextStyle(
+            Text(
+              cityName,
+              style: const TextStyle(
                   fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10.0,
             ),
-            const Padding(
-              padding: EdgeInsets.all(18.0),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 18.0,
+                left: 18.0,
+                right: 18.0,
+                bottom: 10.0,
+              ),
               child: Text(
                 // padding
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                generalInfo,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16.0,
                     color: Colors.grey,
                     fontWeight: FontWeight.normal),
@@ -65,15 +72,17 @@ class BottomSheet extends StatelessWidget{
             const SizedBox(
               height: 10.0,
             ),
-            const TextButton(
-              onPressed: null,
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/location');
+              },
               child: Column(
                 children: <Widget>[
-                  Icon(Icons.keyboard_arrow_up, size: 30.0),
+                  const Icon(Icons.keyboard_arrow_up, size: 30.0),
                   Text(
-                    'XEM THÊM VỀ TP.HCM',
-                    style: TextStyle(
-                      fontSize: 16.0,
+                    'XEM THÊM VỀ $cityName'.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 14.0,
                     ),
                   )
                 ],
@@ -99,62 +108,43 @@ class _MapViewState extends State<MapView> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(14.0583, 108.2772);
-  late final Map<String, double> _marker_colors = <String, double>{
+  final _marker_colors = <String, double>{
     'visited': BitmapDescriptor.hueAzure,
     'new': BitmapDescriptor.hueGreen
   };
-
-  late final Map<String, Marker> _city = {
-    'Da Lat': Marker(
-      onTap: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (context) {return const BottomSheet();});
-      },
-      markerId: const MarkerId('Da Lat'),
-      position: const LatLng(11.9404, 108.4580),
-      icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['new']!),
-    ),
-    'Da Nang': Marker(
-      onTap: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (context) {return const BottomSheet();});
-      },
-      markerId: const MarkerId('Da Nang'),
-      position: const LatLng(16.0544, 108.2022),
-      icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['new']!),
-    ),
-    'Ha Noi': Marker(
-      onTap: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (context) {return const BottomSheet();});
-      },
-      markerId: const MarkerId('Ha Noi'),
-      position: const LatLng(21.0285, 105.8542),
-      icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['new']!),
-    ),
-    'Ho Chi Minh': Marker(
-        onTap: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {return const BottomSheet();});
-        },
-        markerId: const MarkerId('Ho Chi Minh'),
-        position: const LatLng(10.8231, 106.6291),
-        infoWindow: const InfoWindow(
-          title: 'Ho Chi Minh',
-          snippet: 'This is Ho Chi Minh city',
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['visited']!))
-  };
-
   final Map<String, Marker> _markers = {};
+  @override
+  void initState() {
+    super.initState();
+    _markers.addAll(_createCityMarkers());
+  }
 
-  void _onMapCreated(GoogleMapController controller) {
-    _markers.clear();
-    _markers.addAll(_city);
+  Map<String, Marker> _createCityMarkers() {
+    return {
+      'Da Lat': _createMarker('Đà Lạt', const LatLng(11.9404, 108.4580), 'new'),
+      'Da Nang': _createMarker('Đà Nẵng', const LatLng(16.0544, 108.2022), 'new'),
+      'Ha Noi': _createMarker('Hà Nội', const LatLng(21.0285, 105.8542), 'new'),
+      'Ho Chi Minh': _createMarker('TP.HCM', const LatLng(10.8231, 106.6291), 'visited'),
+    };
+  }
+
+  Marker _createMarker(String city, LatLng position, String status) {
+    return Marker(
+      onTap: () => _showModalBottomSheet(city),
+      markerId: MarkerId(city),
+      position: position,
+      icon: status == 'search' ? BitmapDescriptor.defaultMarker : BitmapDescriptor.defaultMarkerWithHue(_marker_colors[status]!),
+    );
+  }
+
+  void _showModalBottomSheet(String city) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => BottomSheet(cityName: city, generalInfo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+    );
+  }
+
+  void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
   }
 
@@ -222,7 +212,11 @@ class _MapViewState extends State<MapView> {
         ),
         Container(
             color: Colors.transparent,
-            margin: const EdgeInsets.all(20.0),
+            margin: const EdgeInsets.only(
+              top: 40.0,
+              left: 20.0,
+              right: 20.0,
+            ),
             child: SearchAnchor(
               builder: (context, controller) {
                 return SearchBar(
@@ -244,37 +238,26 @@ class _MapViewState extends State<MapView> {
                 final List<String> suggestions =
                     await _onAutoCompleteSearch(keyword);
 
-                return List<ListTile>.generate(
-                    (suggestions).length,
-                    (index) => ListTile(
-                          title: Text(suggestions[index]),
-                          onTap: () async {
-                            controller.text = suggestions[index];
-                            final newLatLng =
-                                await _onGeocodeSearch(suggestions[index]);
-                            _markers.clear();
-                            _markers['newLocation'] = Marker(
-                              markerId: const MarkerId('newLocation'),
-                              position:
-                                  LatLng(newLatLng['lat'], newLatLng['lng']),
-                              infoWindow: const InfoWindow(
-                                title: 'New Location',
-                                snippet: 'This is the new location',
-                              ),
-                            );
-                            setState(() {});
-                            mapController.animateCamera(
-                                CameraUpdate.newCameraPosition(CameraPosition(
-                                    target: LatLng(
-                                        newLatLng['lat'], newLatLng['lng']),
-                                    zoom: 9.0)));
-
-                            controller.closeView(suggestions[index]);
-                          },
-                        ));
+                return suggestions.map((suggestion) {
+                  return ListTile(
+                    title: Text(suggestion),
+                    onTap: () => _onSuggestionTap(controller, suggestion),
+                  );
+                }).toList();
               },
             )),
       ],
     ));
   }
+  void _onSuggestionTap(SearchController controller, String suggestion) async {
+    controller.text = suggestion;
+    final newLatLng = await _onGeocodeSearch(suggestion);
+    _markers['newLocation'] = _createMarker('newLocation', LatLng(newLatLng['lat'], newLatLng['lng']), 'search');
+    setState(() {});
+    mapController.animateCamera(CameraUpdate.newLatLng(LatLng(newLatLng['lat'], newLatLng['lng'])));
+    controller.closeView(suggestion);
+  }
 }
+
+
+
