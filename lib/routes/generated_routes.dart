@@ -3,6 +3,7 @@ import '../screens/landing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app/screens/location/location_home_page.dart';
+import 'package:app/screens/location/location_description.dart';
 
 class RouteGenerator {
 
@@ -21,6 +22,13 @@ class RouteGenerator {
           builder: (_) => BlocProvider<LandingPageBloc>.value(
             value: landingPageBloc,
             child: LocationHome(),
+          ),
+        );
+      case '/location-description':
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<LandingPageBloc>.value(
+            value: landingPageBloc,
+            child: LocationDescription(),
           ),
         );
       default:

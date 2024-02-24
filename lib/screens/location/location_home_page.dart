@@ -144,14 +144,13 @@ class _LocationHomeState extends State<LocationHome> {
           currentPositionX = details.localPosition.dx;
         },
         onHorizontalDragEnd: (details) {
-          if (currentPositionX - initialPositionX > 0) {
+          if (currentPositionX - initialPositionX != 0) {
             // Dragged towards the right
             if (currentPositionX - initialPositionX > 100) {
-              // Adjust the threshold for a more accurate swipe
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LocationDescription()),
-              );
+              Navigator.pushNamed(context, '/local-description');
+            }
+            if (initialPositionX - currentPositionX > 100) {
+              Navigator.pushNamed(context, '/');
             }
           }
         },
