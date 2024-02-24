@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
 import 'PassportScreen.dart';
+//
+// class ProfileScreenApp extends StatelessWidget {
+//   const ProfileScreenApp({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       title: 'Profile Screen',
+//       home: ProfileScreen(),
+//     );
+//   }
+// }
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreenApp extends StatelessWidget {
   const ProfileScreenApp({super.key});
 
+  Future<void> clearSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // This will clear all data stored in SharedPreferences
+  }
+
   @override
   Widget build(BuildContext context) {
+    clearSharedPreferences();
     return const MaterialApp(
       title: 'Profile Screen',
       home: ProfileScreen(),
@@ -15,6 +34,7 @@ class ProfileScreenApp extends StatelessWidget {
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+  static const routeName = '/profile';
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +75,6 @@ class ProfileScreen extends StatelessWidget {
               child: const Text('Edit Profile'),
             ),
             ElevatedButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => PassportScreen()));
-
             }, child: const Text('MY PASSPORT')),
           ],
         ),
