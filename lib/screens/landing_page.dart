@@ -1,5 +1,6 @@
 import '../screens/camera/camera_view.dart';
 import '../screens/map/map_view.dart';
+import 'package:app/screens/profile/profileScreen.dart';
 import '../bloc/landing_page_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,8 +28,8 @@ List<BottomNavigationBarItem> bottomNavItems = const <BottomNavigationBarItem>[
 List<Widget> bottomNavScreen = <Widget>[
   const MapView(),
   CameraScreen(cameras: cameras),
-  Text('Index 2: Favourite'),
   Text('Index 3: User'),
+  const ProfileScreen(),
 ];
 
 class LandingPage extends StatelessWidget {
