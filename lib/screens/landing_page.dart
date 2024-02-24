@@ -41,43 +41,6 @@ class LandingPage extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          // body: Center(child: bottomNavScreen.elementAt(state.tabIndex)),
-          // bottomNavigationBar: Container(
-          //   padding: const EdgeInsets.only(top: 0),
-          //   margin: const EdgeInsets.only(
-          //     bottom: 20.0,
-          //     left: 20.0,
-          //     right: 20.0,
-          //   ),
-          //   decoration: BoxDecoration(
-          //     // transparent color
-          //     color: Color.fromARGB(255, 255, 255, 255),
-          //     borderRadius: BorderRadius.circular(25.0), // Adjust the border radius as needed
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Colors.black.withOpacity(0.2), // Shadow color
-          //         spreadRadius: 1, // Spread radius
-          //         blurRadius: 10, // Blur radius
-          //         offset: Offset(0, 3), // Shadow offset
-          //       ),
-          //     ],
-          //   ),
-          //   child: ClipRRect(
-          //     borderRadius: const BorderRadius.all(Radius.circular(27.0)),
-          //     child: BottomNavigationBar(
-          //       showSelectedLabels: false,
-          //       showUnselectedLabels: false,
-          //       items: bottomNavItems,
-          //       currentIndex: state.tabIndex,
-          //       selectedItemColor: Theme.of(context).colorScheme.primary,
-          //       unselectedItemColor: Colors.grey,
-          //       onTap: (index) {
-          //         BlocProvider.of<LandingPageBloc>(context)
-          //             .add(TabChange(tabIndex: index));
-          //       },
-          //     ),
-          //   ),
-          // ),
             body: Stack(
               children: [
                 Positioned.fill(
