@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../settings/settings_view.dart';
+import '../../settings/settings_view.dart';
 import 'sample_item.dart';
 import 'sample_item_details_view.dart';
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatelessWidget {
-  const SampleItemListView({
+  const SampleItemListView({ 
     super.key,
     this.items = const [SampleItem(1), SampleItem(2), SampleItem(3)],
   });
