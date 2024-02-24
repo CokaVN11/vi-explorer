@@ -28,12 +28,18 @@ import 'src/profileScreen.dart';
 
 import './routes/generated_routes.dart';
 import './settings/global.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
   cameras = await availableCameras();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(MyApp(cameras: cameras));
 }

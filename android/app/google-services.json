@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "966863187003",
+    "project_id": "viexplorer-3c58d",
+    "storage_bucket": "viexplorer-3c58d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966863187003:android:57340500e0abbc1570401e",
+        "android_client_info": {
+          "package_name": "com.vi_explorer.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0U1px6Lt1zMsieq7eZmdwArEyLhoLEns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
