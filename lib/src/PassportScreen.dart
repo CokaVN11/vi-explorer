@@ -3,21 +3,22 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
-
-class PassportScreen extends StatelessWidget {
-  const PassportScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Grid Example',
-      home: GridExample(),
-    );
-  }
-}
+//
+// class PassportScreen extends StatelessWidget {
+//   const PassportScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       title: 'Grid Example',
+//       home: GridExample(),
+//     );
+//   }
+// }
 
 class GridExample extends StatelessWidget {
   const GridExample({super.key});
+  static const routeName = '/passport';
 
   Future<void> _scanQR() async {
     final qrCode = await FlutterBarcodeScanner.scanBarcode(
