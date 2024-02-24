@@ -5,6 +5,87 @@ import '../../settings/global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+class BottomSheet extends StatelessWidget{
+  const BottomSheet({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        height: 350.0,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0)),
+        ),
+        child: Column(
+          children: <Widget>[
+            DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(width: 5.0, color: Colors.white),
+              ),
+              child: Padding(
+                padding:
+                const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                child: SizedBox(
+                  width: 100.0,
+                  height: 10.0,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFD9D9D9),
+                      shape: BoxShape.rectangle,
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Text(
+              'Ho Chi Minh',
+              style: TextStyle(
+                  fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            const Padding(
+              padding: EdgeInsets.all(18.0),
+              child: Text(
+                // padding
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.normal),
+              ),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            const TextButton(
+              onPressed: null,
+              child: Column(
+                children: <Widget>[
+                  Icon(Icons.keyboard_arrow_up, size: 30.0),
+                  Text(
+                    'XEM THÊM VỀ TP.HCM',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
+}
+
 class MapView extends StatefulWidget {
   const MapView({super.key});
 
@@ -17,12 +98,63 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   late GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(10.8231, 106.6291);
-  final Map<String, Marker> _markers = {};
+  final LatLng _center = const LatLng(14.0583, 108.2772);
+  late final Map<String, double> _marker_colors = <String, double>{
+    'visited': BitmapDescriptor.hueAzure,
+    'new': BitmapDescriptor.hueGreen
+  };
 
+  late final Map<String, Marker> _city = {
+    'Da Lat': Marker(
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) {return const BottomSheet();});
+      },
+      markerId: const MarkerId('Da Lat'),
+      position: const LatLng(11.9404, 108.4580),
+      icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['new']!),
+    ),
+    'Da Nang': Marker(
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) {return const BottomSheet();});
+      },
+      markerId: const MarkerId('Da Nang'),
+      position: const LatLng(16.0544, 108.2022),
+      icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['new']!),
+    ),
+    'Ha Noi': Marker(
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) {return const BottomSheet();});
+      },
+      markerId: const MarkerId('Ha Noi'),
+      position: const LatLng(21.0285, 105.8542),
+      icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['new']!),
+    ),
+    'Ho Chi Minh': Marker(
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {return const BottomSheet();});
+        },
+        markerId: const MarkerId('Ho Chi Minh'),
+        position: const LatLng(10.8231, 106.6291),
+        infoWindow: const InfoWindow(
+          title: 'Ho Chi Minh',
+          snippet: 'This is Ho Chi Minh city',
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(_marker_colors['visited']!))
+  };
+
+  final Map<String, Marker> _markers = {};
 
   void _onMapCreated(GoogleMapController controller) {
     _markers.clear();
+    _markers.addAll(_city);
     mapController = controller;
   }
 
@@ -50,7 +182,7 @@ class _MapViewState extends State<MapView> {
     return [];
   }
 
-  Future<LatLng> _onGeocodeSearch(String keyword) async {
+  Future<Map<String, dynamic>> _onGeocodeSearch(String keyword) async {
     final String url =
         'https://maps.googleapis.com/maps/api/geocode/json?address=$keyword&key=$GOOGLE_MAP_API';
     try {
@@ -60,9 +192,11 @@ class _MapViewState extends State<MapView> {
         print(data);
       }
 
-      final LatLng location = LatLng(
-          data['results'][0]['geometry']['location']['lat'],
-          data['results'][0]['geometry']['location']['lng']);
+      final Map<String, dynamic> location = {
+        'address': data['results'][0]['address_components'][2]['long_name'],
+        'lat': data['results'][0]['geometry']['location']['lat'],
+        'lng': data['results'][0]['geometry']['location']['lng']
+      };
       return location;
     } catch (error) {
       if (kDebugMode) {
@@ -70,7 +204,7 @@ class _MapViewState extends State<MapView> {
       }
     }
 
-    return _center;
+    return {'address': '', 'lat': _center.latitude, 'lng': _center.longitude};
   }
 
   @override
@@ -83,7 +217,7 @@ class _MapViewState extends State<MapView> {
           markers: _markers.values.toSet(),
           initialCameraPosition: CameraPosition(
             target: _center,
-            zoom: 11.0,
+            zoom: 7.0,
           ),
         ),
         Container(
@@ -116,12 +250,13 @@ class _MapViewState extends State<MapView> {
                           title: Text(suggestions[index]),
                           onTap: () async {
                             controller.text = suggestions[index];
-                            final newLatLng = await _onGeocodeSearch(
-                              suggestions[index]);
+                            final newLatLng =
+                                await _onGeocodeSearch(suggestions[index]);
                             _markers.clear();
                             _markers['newLocation'] = Marker(
                               markerId: const MarkerId('newLocation'),
-                              position: newLatLng,
+                              position:
+                                  LatLng(newLatLng['lat'], newLatLng['lng']),
                               infoWindow: const InfoWindow(
                                 title: 'New Location',
                                 snippet: 'This is the new location',
@@ -130,8 +265,9 @@ class _MapViewState extends State<MapView> {
                             setState(() {});
                             mapController.animateCamera(
                                 CameraUpdate.newCameraPosition(CameraPosition(
-                                    target: newLatLng,
-                                    zoom: 17.0)));
+                                    target: LatLng(
+                                        newLatLng['lat'], newLatLng['lng']),
+                                    zoom: 9.0)));
 
                             controller.closeView(suggestions[index]);
                           },
