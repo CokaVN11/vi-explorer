@@ -147,7 +147,7 @@ class _LocationHomeState extends State<LocationHome> {
           if (currentPositionX - initialPositionX != 0) {
             // Dragged towards the right
             if (currentPositionX - initialPositionX > 100) {
-              Navigator.pushNamed(context, '/local-description');
+              Navigator.pushNamed(context, '/location-description');
             }
             if (initialPositionX - currentPositionX > 100) {
               Navigator.pushNamed(context, '/');
