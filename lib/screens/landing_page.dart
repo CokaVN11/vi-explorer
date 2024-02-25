@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../screens/camera/camera_view.dart';
 import '../screens/map/map_view.dart';
 import 'package:app/screens/profile/profileScreen.dart';
@@ -70,7 +72,9 @@ class _LandingPageState extends State<LandingPage> {
 
   void _resetTimer() {
     // Reset the timer when user interacts with the screen
-    print('Resetting timer');
+    if (kDebugMode) {
+      print('Resetting timer');
+    }
     _timer.cancel();
     _startTimer();
     setState(() {

@@ -2,6 +2,8 @@ import 'package:app/screens/location/location_description.dart';
 import 'package:flutter/material.dart';
 
 class LocationHome extends StatefulWidget {
+  const LocationHome({super.key});
+
   @override
   _LocationHomeState createState() => _LocationHomeState();
 }
@@ -16,6 +18,164 @@ class ImageData {
     required this.title,
     required this.rating,
   });
+}
+
+class CategoryButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final Function() onPressed;
+
+  const CategoryButton({
+    super.key,
+    required this.label,
+    required this.isSelected,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 14,
+          color: isSelected ? const Color(0xFF436850) : Colors.grey,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+  }
+}
+
+class SectionWidget extends StatelessWidget {
+  final String title;
+  final List<ImageData> dataList;
+  final String variant;
+  // variant: large, small
+
+  const SectionWidget({
+    super.key,
+    required this.title,
+    required this.dataList,
+    required this.variant,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+            const Text(
+              'Xem tất cả',
+              style: TextStyle(
+                color: Color(0xFF436850),
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+            height: variant == 'large' ? 240 : 120,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return ImageItem(data: dataList[index], variant: variant);
+                })),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+}
+
+class ImageItem extends StatelessWidget {
+  final ImageData data;
+  final String variant;
+  // variant: large, small
+
+  const ImageItem({super.key, required this.data, required this.variant});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        image: DecorationImage(
+          image: AssetImage(data.imageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+      width: variant == 'large' ? 200 : 180,
+      height: variant == 'large' ? 240 : 220,
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(15),
+                  bottomLeft: Radius.circular(15),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        variant == 'large'
+                            ? Icons.star
+                            : Icons.show_chart_rounded,
+                        color: variant == 'large'
+                            ? Colors.yellow
+                            : Colors.blueAccent,
+                        size: 16,
+                      ),
+                      Text(
+                        variant == 'large'
+                            ? data.rating.toString()
+                            : 'Hot trend',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _LocationHomeState extends State<LocationHome> {
@@ -157,8 +317,8 @@ class _LocationHomeState extends State<LocationHome> {
         child: Stack(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(left: 14, top: 32, right: 14, bottom: 16),
+              padding: const EdgeInsets.only(
+                  left: 14, top: 32, right: 14, bottom: 16),
               color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -181,7 +341,7 @@ class _LocationHomeState extends State<LocationHome> {
                           ),
                           SizedBox(width: 2), // Adjust spacing as needed
                           Text(
-                            'Đà Lạt, Lâm Đồng',
+                            'Lâm Đồng',
                             style: TextStyle(
                               color: Color(0xFF606060),
                               fontSize: 18,
@@ -202,7 +362,7 @@ class _LocationHomeState extends State<LocationHome> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Đà Lạt',
+                        'Lâm Đồng',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 32,
@@ -242,253 +402,40 @@ class _LocationHomeState extends State<LocationHome> {
                   const SizedBox(height: 15),
                   Row(
                     children: [
-                      TextButton(
-                        onPressed: () => _onButtonPressed(1),
-                        child: Text(
-                          'Ăn uống',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: _selectedIndex == 1
-                                ? const Color(0xFF436850)
-                                : Colors.grey,
-                            fontWeight: _selectedIndex == 1
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => _onButtonPressed(2),
-                        child: Text(
-                          'Vui chơi',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: _selectedIndex == 2
-                                ? const Color(0xFF436850)
-                                : Colors.grey,
-                            fontWeight: _selectedIndex == 2
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => _onButtonPressed(3),
-                        child: Text(
-                          'Khách sạn',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: _selectedIndex == 3
-                                ? const Color(0xFF436850)
-                                : Colors.grey,
-                            fontWeight: _selectedIndex == 3
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
+                      CategoryButton(
+                          label: 'Ăn uống',
+                          isSelected: _selectedIndex == 1,
+                          onPressed: () => _onButtonPressed(1)),
+                      CategoryButton(
+                          label: 'Vui chơi',
+                          isSelected: _selectedIndex == 2,
+                          onPressed: () => _onButtonPressed(2)),
+                      CategoryButton(
+                          label: 'Khách sạn',
+                          isSelected: _selectedIndex == 3,
+                          onPressed: () => _onButtonPressed(3)),
                     ],
                   ),
                   Expanded(
-                    child: Container(
-                      // color: Colors.lightBlueAccent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Phổ biến',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                'Xem tất cả',
-                                style: TextStyle(
-                                  color: Color(0xFF436850),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 240,
-                            // Set the height of the image container
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 4, // Number of images
-                              itemBuilder: (context, index) {
-                                final List<ImageData> selectedList =
-                                    _selectedIndex == 1
-                                        ? _popularFood
-                                        : (_selectedIndex == 2
-                                            ? _popularRecreation
-                                            : _popularHome);
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 15),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          selectedList[index].imageUrl),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  width: 200,
-                                  height: 240,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        left: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black54,
-                                            borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(15),
-                                              bottomLeft: Radius.circular(15),
-                                            ),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                selectedList[index].title,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.star,
-                                                    color: Colors.yellow,
-                                                    size: 16,
-                                                  ),
-                                                  Text(
-                                                    selectedList[index]
-                                                        .rating
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Đề xuất',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 140,
-                            // Set the height of the image container
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 3, // Number of images
-                              itemBuilder: (context, index) {
-                                final List<ImageData> selectedList =
-                                    _selectedIndex == 1
-                                        ? _recommendedFood
-                                        : (_selectedIndex == 2
-                                            ? _recommendedRecreation
-                                            : _recommendedHome);
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 15),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          selectedList[index].imageUrl),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  width: 180,
-                                  height: 220,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        left: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black54,
-                                            borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(15),
-                                              bottomLeft: Radius.circular(15),
-                                            ),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                selectedList[index].title,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              const Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.show_chart_rounded,
-                                                    color: Colors.blueAccent,
-                                                    size: 16,
-                                                  ),
-                                                  Text(
-                                                    'Hot trend',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: ListView.builder(
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        return SectionWidget(
+                          variant: index == 0 ? 'large' : 'small',
+                          title: _getSectionTitle(index),
+                          dataList: _selectedIndex == 1
+                              ? index == 0
+                                  ? _popularFood
+                                  : _recommendedFood
+                              : _selectedIndex == 2
+                                  ? index == 0
+                                      ? _popularRecreation
+                                      : _recommendedRecreation
+                                  : index == 0
+                                      ? _popularHome
+                                      : _recommendedHome,
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -503,7 +450,8 @@ class _LocationHomeState extends State<LocationHome> {
                 height: 60,
                 decoration: BoxDecoration(
                   color: const Color(0xFFB7C5AB),
-                  borderRadius: BorderRadius.circular(30), // Adjust the radius to round the corners
+                  borderRadius: BorderRadius.circular(
+                      30), // Adjust the radius to round the corners
                 ),
               ),
             ),
@@ -513,15 +461,20 @@ class _LocationHomeState extends State<LocationHome> {
     );
   }
 
+  String _getSectionTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Phổ biến';
+      case 1:
+        return 'Đề xuất';
+      default:
+        return 'Phổ biến';
+    }
+  }
+
   void _onButtonPressed(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: LocationHome(),
-  ));
 }
