@@ -9,7 +9,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class BottomSheet extends StatelessWidget {
   final String cityName;
   final String generalInfo;
-  const BottomSheet({super.key, required this.cityName, required this.generalInfo});
+
+  const BottomSheet(
+      {super.key, required this.cityName, required this.generalInfo});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,8 +21,7 @@ class BottomSheet extends StatelessWidget {
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0)),
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
         ),
         child: Column(
           children: <Widget>[
@@ -29,8 +31,7 @@ class BottomSheet extends StatelessWidget {
                 border: Border.all(width: 5.0, color: Colors.white),
               ),
               child: Padding(
-                padding:
-                const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
                 child: SizedBox(
                   width: 100.0,
                   height: 10.0,
@@ -38,8 +39,7 @@ class BottomSheet extends StatelessWidget {
                     decoration: const BoxDecoration(
                       color: Color(0xFFD9D9D9),
                       shape: BoxShape.rectangle,
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(8.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
                   ),
                 ),
@@ -47,8 +47,8 @@ class BottomSheet extends StatelessWidget {
             ),
             Text(
               cityName,
-              style: const TextStyle(
-                  fontSize: 20.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10.0,
@@ -61,7 +61,7 @@ class BottomSheet extends StatelessWidget {
                 bottom: 10.0,
               ),
               child: Text(
-                // padding
+                maxLines: 6,
                 generalInfo,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -90,10 +90,8 @@ class BottomSheet extends StatelessWidget {
               ),
             ),
           ],
-        )
-    );
+        ));
   }
-
 }
 
 class MapView extends StatefulWidget {
@@ -117,6 +115,7 @@ class _MapViewState extends State<MapView> {
     'new': BitmapDescriptor.hueGreen
   };
   final Map<String, Marker> _markers = {};
+
   @override
   void initState() {
     super.initState();
@@ -130,15 +129,20 @@ class _MapViewState extends State<MapView> {
     });
   }
 
-
   Future<Map<String, Marker>> _createCityMarkers() async {
-    final regions = <String, Marker> {};
+    final regions = {};
     final regionsSnapshot = await db.collection('regions').get();
     regionsSnapshot.docs.forEach((element) {
       final data = element.data();
       final name = data['name'];
+      final info = data['info'];
       final latLng = LatLng(data['coor'].latitude, data['coor'].longitude);
-      regions[data['id']] = _createMarker(name, latLng, 'new');
+      regions[data['id']] = {
+        'name': name,
+        'info': info,
+        'latLng': latLng,
+        'status': 'new'
+      };
     });
 
     final userSnapshot = await db.collection('users').get();
@@ -148,36 +152,38 @@ class _MapViewState extends State<MapView> {
     visited.forEach((element) {
       final regionId = element.substring(element.length - 3);
       if (regions.containsKey(regionId)) {
-        final latLng = regions[regionId]!.position;
-        regions[regionId] = _createMarker(regions[regionId]!.markerId.value, latLng, 'visited');
+        regions[regionId]['status'] = 'visited';
       }
     });
     if (kDebugMode) {
       print(regions);
     }
-    return regions;
 
-    // return {
-    //   'Da Lat': _createMarker('Đà Lạt', const LatLng(11.9404, 108.4580), 'new'),
-    //   'Da Nang': _createMarker('Đà Nẵng', const LatLng(16.0544, 108.2022), 'new'),
-    //   'Ha Noi': _createMarker('Hà Nội', const LatLng(21.0285, 105.8542), 'new'),
-    //   'Ho Chi Minh': _createMarker('TP.HCM', const LatLng(10.8231, 106.6291), 'visited'),
-    // };
+    final markers = <String, Marker>{};
+    regions.forEach((key, value) {
+      markers[key] = _createMarker(
+          value['name'], value['info'], value['latLng'], value['status']);
+    });
+    return markers;
   }
 
-  Marker _createMarker(String city, LatLng position, String status) {
+  Marker _createMarker(
+      String city, String info, LatLng position, String status) {
     return Marker(
-      onTap: () => _showModalBottomSheet(city),
+      onTap:
+          status != 'search' ? () => _showModalBottomSheet(city, info) : null,
       markerId: MarkerId(city),
       position: position,
-      icon: status == 'search' ? BitmapDescriptor.defaultMarker : BitmapDescriptor.defaultMarkerWithHue(_marker_colors[status]!),
+      icon: status == 'search'
+          ? BitmapDescriptor.defaultMarker
+          : BitmapDescriptor.defaultMarkerWithHue(_marker_colors[status]!),
     );
   }
 
-  void _showModalBottomSheet(String city) {
+  void _showModalBottomSheet(String city, String info) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => BottomSheet(cityName: city, generalInfo: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'),
+      builder: (context) => BottomSheet(cityName: city, generalInfo: info),
     );
   }
 
@@ -286,15 +292,15 @@ class _MapViewState extends State<MapView> {
       ],
     ));
   }
+
   void _onSuggestionTap(SearchController controller, String suggestion) async {
     controller.text = suggestion;
     final newLatLng = await _onGeocodeSearch(suggestion);
-    _markers['newLocation'] = _createMarker('newLocation', LatLng(newLatLng['lat'], newLatLng['lng']), 'search');
+    _markers['newLocation'] = _createMarker('newLocation', '',
+        LatLng(newLatLng['lat'], newLatLng['lng']), 'search');
     setState(() {});
-    mapController.animateCamera(CameraUpdate.newLatLng(LatLng(newLatLng['lat'], newLatLng['lng'])));
+    mapController.animateCamera(
+        CameraUpdate.newLatLng(LatLng(newLatLng['lat'], newLatLng['lng'])));
     controller.closeView(suggestion);
   }
 }
-
-
-
