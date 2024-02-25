@@ -22,7 +22,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     print(images.length);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -58,10 +57,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 itemBuilder: (context, i) {
                 return GestureDetector(
                   onVerticalDragUpdate: (details) {
-                    // Check if the user swiped down
                     if (details.primaryDelta! > 0) {
-                      // Add your logic for swipe down action here
-                      // For example, you can print a message or call a function
                       print('Swiped down');
                       scrollController.animateTo(
                           scrollController.position.minScrollExtent,
@@ -82,7 +78,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
                           width: 40,
@@ -95,7 +91,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 color: Colors.transparent,
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Add logic to save image to local gallery
+                                    GallerySaver.saveImage(images[i]);
+                                    // display a snackbar showing that the image has been saved
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Image Saved'),
+                                        duration: Duration(seconds: 1),
+                                      ),
+                                    );
                                   },
                                   child: Icon(
                                     Icons.save_alt,
